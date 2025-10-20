@@ -1,16 +1,16 @@
-import { MessageCircle, LogOut, Settings } from 'lucide-react';
-import ContactItem from './ContactItem';
+import { MessageCircle, LogOut, Settings } from "lucide-react";
+import ContactItem from "./ContactItem";
 
-const Sidebar = ({ 
-  contacts, 
-  activeTab, 
-  onTabChange, 
-  selectedContactId, 
+const Sidebar = ({
+  contacts,
+  activeTab,
+  onTabChange,
+  selectedContactId,
   onContactSelect,
   user,
-  onLogout
+  onLogout,
 }) => {
-  const tabs = ['All', 'Favorite', 'Groups'];
+  const tabs = ["All", "Favorite", "Groups"];
 
   return (
     <div className="w-80 bg-slate-800 border-r border-slate-700 flex flex-col h-full">
@@ -34,8 +34,8 @@ const Sidebar = ({
               onClick={() => onTabChange(tab)}
               className={`flex-1 py-2 px-4 rounded-full text-sm font-medium transition-all duration-200 ${
                 activeTab === tab
-                  ? 'bg-violet-600 text-white shadow-lg'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-600'
+                  ? "bg-violet-600 text-white shadow-lg"
+                  : "text-slate-300 hover:text-white hover:bg-slate-600"
               }`}
             >
               {tab}
@@ -54,9 +54,9 @@ const Sidebar = ({
               name: contact.username,
               avatar: contact.avatar,
               status: contact.status,
-              timestamp: contact.lastMessage ? 'Just now' : 'No messages',
+              timestamp: contact.lastMessage ? "Just now" : "No messages",
               isOnline: contact.isOnline,
-              unreadCount: 0 // TODO: implement unread count
+              unreadCount: 0, // TODO: implement unread count
             }}
             isSelected={selectedContactId === contact._id}
             onClick={() => onContactSelect(contact._id)}
@@ -73,7 +73,9 @@ const Sidebar = ({
                 {user.username.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0">
-                <p className="text-white font-medium truncate">{user.username}</p>
+                <p className="text-white font-medium truncate">
+                  {user.username}
+                </p>
                 <p className="text-xs text-slate-400 truncate">{user.email}</p>
               </div>
             </div>
@@ -81,7 +83,7 @@ const Sidebar = ({
               <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
                 <Settings className="w-4 h-4" />
               </button>
-              <button 
+              <button
                 onClick={onLogout}
                 className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-700 rounded-lg transition-colors"
                 title="Logout"

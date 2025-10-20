@@ -1,38 +1,38 @@
-import { useState } from 'react';
-import { MessageCircle, Eye, EyeOff } from 'lucide-react';
+import { useState } from "react";
+import { MessageCircle, Eye, EyeOff } from "lucide-react";
 
 const Login = ({ onSwitchToSignup, onLogin }) => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // Clear error when user starts typing
-    if (error) setError('');
+    if (error) setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
       // Basic validation
       if (!formData.email || !formData.password) {
-        throw new Error('Please fill in all fields');
+        throw new Error("Please fill in all fields");
       }
 
-      if (!formData.email.includes('@')) {
-        throw new Error('Please enter a valid email address');
+      if (!formData.email.includes("@")) {
+        throw new Error("Please enter a valid email address");
       }
 
       // Call the onLogin callback (which now makes real API call)
@@ -67,7 +67,10 @@ const Login = ({ onSwitchToSignup, onLogin }) => {
           )}
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-slate-300 mb-2"
+            >
               Email Address
             </label>
             <input
@@ -83,12 +86,15 @@ const Login = ({ onSwitchToSignup, onLogin }) => {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-slate-300 mb-2"
+            >
               Password
             </label>
             <div className="relative">
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={formData.password}
@@ -102,7 +108,11 @@ const Login = ({ onSwitchToSignup, onLogin }) => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
           </div>
@@ -115,7 +125,10 @@ const Login = ({ onSwitchToSignup, onLogin }) => {
               />
               <span className="ml-2 text-sm text-slate-300">Remember me</span>
             </label>
-            <button type="button" className="text-sm text-violet-400 hover:text-violet-300 transition-colors">
+            <button
+              type="button"
+              className="text-sm text-violet-400 hover:text-violet-300 transition-colors"
+            >
               Forgot password?
             </button>
           </div>
@@ -128,7 +141,7 @@ const Login = ({ onSwitchToSignup, onLogin }) => {
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
             ) : (
-              'Sign In'
+              "Sign In"
             )}
           </button>
         </form>
@@ -136,7 +149,7 @@ const Login = ({ onSwitchToSignup, onLogin }) => {
         {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-slate-400">
-            Don't have an account?{' '}
+            Don't have an account?{" "}
             <button
               onClick={onSwitchToSignup}
               className="text-violet-400 hover:text-violet-300 font-medium transition-colors"

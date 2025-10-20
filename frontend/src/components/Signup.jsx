@@ -1,26 +1,26 @@
-import { useState } from 'react';
-import { MessageCircle, Eye, EyeOff, Check, X } from 'lucide-react';
+import { useState } from "react";
+import { MessageCircle, Eye, EyeOff, Check, X } from "lucide-react";
 
 const Signup = ({ onSwitchToLogin, onSignup }) => {
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // Clear error when user starts typing
-    if (error) setError('');
+    if (error) setError("");
   };
 
   // Password validation helper
@@ -31,7 +31,7 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
       hasLower: /[a-z]/.test(password),
       hasUpper: /[A-Z]/.test(password),
       hasNumber: /\d/.test(password),
-      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password),
     };
   };
 
@@ -41,24 +41,29 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
       // Basic validation
-      if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
-        throw new Error('Please fill in all fields');
+      if (
+        !formData.username ||
+        !formData.email ||
+        !formData.password ||
+        !formData.confirmPassword
+      ) {
+        throw new Error("Please fill in all fields");
       }
 
-      if (!formData.email.includes('@')) {
-        throw new Error('Please enter a valid email address');
+      if (!formData.email.includes("@")) {
+        throw new Error("Please enter a valid email address");
       }
 
       if (!isPasswordValid) {
-        throw new Error('Password does not meet requirements');
+        throw new Error("Password does not meet requirements");
       }
 
       if (formData.password !== formData.confirmPassword) {
-        throw new Error('Passwords do not match');
+        throw new Error("Passwords do not match");
       }
 
       // Call the onSignup callback (which now makes real API call)
@@ -77,7 +82,9 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
       ) : (
         <X className="w-4 h-4 text-slate-500" />
       )}
-      <span className={`text-xs ${isValid ? 'text-emerald-400' : 'text-slate-500'}`}>
+      <span
+        className={`text-xs ${isValid ? "text-emerald-400" : "text-slate-500"}`}
+      >
         {text}
       </span>
     </div>
@@ -94,7 +101,9 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Join Convo</h1>
-          <p className="text-slate-400">Create your account to start chatting</p>
+          <p className="text-slate-400">
+            Create your account to start chatting
+          </p>
         </div>
 
         {/* Form */}
@@ -106,7 +115,10 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
           )}
 
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-slate-300 mb-2">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-slate-300 mb-2"
+            >
               Username
             </label>
             <input
@@ -122,7 +134,10 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-slate-300 mb-2"
+            >
               Email Address
             </label>
             <input
@@ -138,12 +153,15 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-slate-300 mb-2"
+            >
               Password
             </label>
             <div className="relative">
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={formData.password}
@@ -157,37 +175,60 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
-            
+
             {/* Password Requirements */}
             {formData.password && (
               <div className="mt-3 p-3 bg-slate-800/50 rounded-lg space-y-2">
-                <ValidationItem isValid={passwordValidation.minLength} text="At least 8 characters" />
-                <ValidationItem isValid={passwordValidation.hasLower} text="One lowercase letter" />
-                <ValidationItem isValid={passwordValidation.hasUpper} text="One uppercase letter" />
-                <ValidationItem isValid={passwordValidation.hasNumber} text="One number" />
-                <ValidationItem isValid={passwordValidation.hasSpecial} text="One special character" />
+                <ValidationItem
+                  isValid={passwordValidation.minLength}
+                  text="At least 8 characters"
+                />
+                <ValidationItem
+                  isValid={passwordValidation.hasLower}
+                  text="One lowercase letter"
+                />
+                <ValidationItem
+                  isValid={passwordValidation.hasUpper}
+                  text="One uppercase letter"
+                />
+                <ValidationItem
+                  isValid={passwordValidation.hasNumber}
+                  text="One number"
+                />
+                <ValidationItem
+                  isValid={passwordValidation.hasSpecial}
+                  text="One special character"
+                />
               </div>
             )}
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-300 mb-2">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-slate-300 mb-2"
+            >
               Confirm Password
             </label>
             <div className="relative">
               <input
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 pr-12 bg-slate-800 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent transition-all ${
-                  formData.confirmPassword && formData.password !== formData.confirmPassword
-                    ? 'border-red-500'
-                    : 'border-slate-700'
+                  formData.confirmPassword &&
+                  formData.password !== formData.confirmPassword
+                    ? "border-red-500"
+                    : "border-slate-700"
                 }`}
                 placeholder="Confirm your password"
                 required
@@ -197,12 +238,19 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
               >
-                {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showConfirmPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
-            {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-              <p className="mt-2 text-sm text-red-400">Passwords do not match</p>
-            )}
+            {formData.confirmPassword &&
+              formData.password !== formData.confirmPassword && (
+                <p className="mt-2 text-sm text-red-400">
+                  Passwords do not match
+                </p>
+              )}
           </div>
 
           <div>
@@ -213,12 +261,18 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
                 required
               />
               <span className="text-sm text-slate-300">
-                I agree to the{' '}
-                <button type="button" className="text-violet-400 hover:text-violet-300 transition-colors">
+                I agree to the{" "}
+                <button
+                  type="button"
+                  className="text-violet-400 hover:text-violet-300 transition-colors"
+                >
                   Terms of Service
-                </button>{' '}
-                and{' '}
-                <button type="button" className="text-violet-400 hover:text-violet-300 transition-colors">
+                </button>{" "}
+                and{" "}
+                <button
+                  type="button"
+                  className="text-violet-400 hover:text-violet-300 transition-colors"
+                >
                   Privacy Policy
                 </button>
               </span>
@@ -233,7 +287,7 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
             ) : (
-              'Create Account'
+              "Create Account"
             )}
           </button>
         </form>
@@ -241,7 +295,7 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
         {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-slate-400">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <button
               onClick={onSwitchToLogin}
               className="text-violet-400 hover:text-violet-300 font-medium transition-colors"

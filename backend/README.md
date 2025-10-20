@@ -48,27 +48,32 @@ backend/
 ## Installation
 
 1. **Clone the repository and navigate to backend folder**
+
    ```bash
    cd backend
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
    Copy the `.env` file and update the values as needed:
+
    ```bash
    cp .env.example .env
    ```
 
 4. **Start the development server**
+
    ```bash
    npm run dev
    ```
 
    Or for production:
+
    ```bash
    npm start
    ```
@@ -97,12 +102,14 @@ SOCKET_ORIGINS=http://localhost:5177
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - Register a new user
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
 - `GET /api/auth/me` - Get current user profile
 
 ### Users
+
 - `GET /api/users` - Get all users (with search and pagination)
 - `GET /api/users/:userId` - Get user profile by ID
 - `PUT /api/users/:userId` - Update user profile
@@ -110,6 +117,7 @@ SOCKET_ORIGINS=http://localhost:5177
 - `GET /api/users/:userId/contacts` - Get user's contacts
 
 ### Chat
+
 - `GET /api/chat/rooms` - Get all chat rooms
 - `POST /api/chat/rooms` - Create a new chat room
 - `GET /api/chat/rooms/:roomId/messages` - Get messages for a room
@@ -118,12 +126,14 @@ SOCKET_ORIGINS=http://localhost:5177
 - `DELETE /api/chat/messages/:messageId` - Delete a message
 
 ### System
+
 - `GET /` - API information
 - `GET /health` - Health check endpoint
 
 ## Socket.IO Events
 
 ### Client → Server
+
 - `join_room` - Join a chat room
 - `send_message` - Send a message
 - `typing_start` - Start typing indicator
@@ -131,6 +141,7 @@ SOCKET_ORIGINS=http://localhost:5177
 - `user_online` - Set user online status
 
 ### Server → Client
+
 - `receive_message` - Receive a new message
 - `user_typing` - User is typing
 - `user_stopped_typing` - User stopped typing
@@ -158,6 +169,7 @@ The API returns consistent error responses:
 ## Development
 
 ### Running in Development Mode
+
 ```bash
 npm run dev
 ```
@@ -167,11 +179,13 @@ This uses nodemon to automatically restart the server when files change.
 ### Testing the API
 
 You can test the API endpoints using tools like:
+
 - **Postman**
 - **curl**
 - **VS Code REST Client**
 
 Example curl command:
+
 ```bash
 curl -X POST http://localhost:3001/api/auth/register \
   -H "Content-Type: application/json" \

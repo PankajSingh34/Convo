@@ -14,6 +14,7 @@ A modern, full-stack chat application built with React, Node.js, and MongoDB. Fe
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **React 18** - Modern React with hooks
 - **Vite** - Fast development server and build tool
 - **Tailwind CSS** - Utility-first CSS framework
@@ -21,6 +22,7 @@ A modern, full-stack chat application built with React, Node.js, and MongoDB. Fe
 - **Axios** - HTTP client for API calls
 
 ### Backend
+
 - **Node.js** - JavaScript runtime
 - **Express.js** - Web application framework
 - **MongoDB** - NoSQL database with Mongoose ODM
@@ -31,6 +33,7 @@ A modern, full-stack chat application built with React, Node.js, and MongoDB. Fe
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - MongoDB Atlas account or local MongoDB installation
 - Git
@@ -38,26 +41,30 @@ A modern, full-stack chat application built with React, Node.js, and MongoDB. Fe
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/convo.git
    cd convo
    ```
 
 2. **Install Frontend Dependencies**
+
    ```bash
    cd frontend
    npm install
    ```
 
 3. **Install Backend Dependencies**
+
    ```bash
    cd ../backend
    npm install
    ```
 
 4. **Environment Setup**
-   
+
    Create a `.env` file in the `backend` directory:
+
    ```env
    PORT=3001
    MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/convo
@@ -74,10 +81,12 @@ A modern, full-stack chat application built with React, Node.js, and MongoDB. Fe
 ### Running the Application
 
 1. **Start Backend Server**
+
    ```bash
    cd backend
    node src/server.js
    ```
+
    Server will run on http://localhost:3001
 
 2. **Start Frontend Development Server**
@@ -140,17 +149,21 @@ The application uses JWT (JSON Web Tokens) for authentication:
 ## 📝 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - Login user
 
 ### Chat
+
 - `GET /api/chat/messages/:conversationId` - Get conversation messages
 - `POST /api/chat/send` - Send new message
 
 ### Users
+
 - `GET /api/users` - Get all users (for contacts)
 
 ### Seeding
+
 - `POST /api/seed/users` - Seed database with sample users
 
 ## 🎨 UI Features

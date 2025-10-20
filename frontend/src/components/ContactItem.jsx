@@ -1,12 +1,12 @@
 const ContactItem = ({ contact, isSelected, onClick }) => {
   const getAvatarColor = (name) => {
     const colors = [
-      'bg-violet-500',
-      'bg-emerald-500', 
-      'bg-blue-500',
-      'bg-pink-500',
-      'bg-orange-500',
-      'bg-indigo-500',
+      "bg-violet-500",
+      "bg-emerald-500",
+      "bg-blue-500",
+      "bg-pink-500",
+      "bg-orange-500",
+      "bg-indigo-500",
     ];
     const index = name.charCodeAt(0) % colors.length;
     return colors[index];
@@ -16,13 +16,17 @@ const ContactItem = ({ contact, isSelected, onClick }) => {
     <div
       onClick={onClick}
       className={`flex items-center space-x-4 p-4 cursor-pointer transition-all duration-200 hover:bg-slate-700 border-l-4 ${
-        isSelected 
-          ? 'bg-violet-600 border-violet-400' 
-          : 'border-transparent hover:border-slate-600'
+        isSelected
+          ? "bg-violet-600 border-violet-400"
+          : "border-transparent hover:border-slate-600"
       }`}
     >
       <div className="relative">
-        <div className={`w-12 h-12 ${getAvatarColor(contact.name)} rounded-full flex items-center justify-center text-white font-semibold`}>
+        <div
+          className={`w-12 h-12 ${getAvatarColor(
+            contact.name
+          )} rounded-full flex items-center justify-center text-white font-semibold`}
+        >
           {contact.avatar}
         </div>
         {contact.isOnline && (

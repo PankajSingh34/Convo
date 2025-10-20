@@ -1,19 +1,19 @@
 export const errorHandler = (err, req, res, next) => {
-  console.error('Error:', err);
+  console.error("Error:", err);
 
   // Default error
   let error = {
     statusCode: err.statusCode || 500,
-    message: err.message || 'Internal Server Error'
+    message: err.message || "Internal Server Error",
   };
 
   // Mongoose validation error
-  if (err.name === 'ValidationError') {
-    const messages = Object.values(err.errors).map(val => val.message);
+  if (err.name === "ValidationError") {
+    const messages = Object.values(err.errors).map((val) => val.message);
     error = {
       statusCode: 400,
-      message: 'Validation Error',
-      errors: messages
+      message: "Validation Error",
+      errors: messages,
     };
   }
 
@@ -23,41 +23,41 @@ export const errorHandler = (err, req, res, next) => {
     error = {
       statusCode: 400,
       message: `${field} already exists`,
-      field
+      field,
     };
   }
 
   // JWT errors
-  if (err.name === 'JsonWebTokenError') {
+  if (err.name === "JsonWebTokenError") {
     error = {
       statusCode: 401,
-      message: 'Invalid token'
+      message: "Invalid token",
     };
   }
 
-  if (err.name === 'TokenExpiredError') {
+  if (err.name === "TokenExpiredError") {
     error = {
       statusCode: 401,
-      message: 'Token expired'
+      message: "Token expired",
     };
   }
 
   // Mongoose CastError (invalid ObjectId)
-  if (err.name === 'CastError') {
+  if (err.name === "CastError") {
     error = {
       statusCode: 400,
-      message: 'Invalid ID format'
+      message: "Invalid ID format",
     };
   }
 
   res.status(error.statusCode).json({
     error: error.message,
-    ...(process.env.NODE_ENV === 'development' && { 
+    ...(process.env.NODE_ENV === "development" && {
       stack: err.stack,
-      original: err 
+      original: err,
     }),
     ...(error.errors && { errors: error.errors }),
-    ...(error.field && { field: error.field })
+    ...(error.field && { field: error.field }),
   });
 };
 

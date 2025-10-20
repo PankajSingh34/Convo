@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { Home, Users, Bell, User, Send, Paperclip, Smile } from 'lucide-react';
-import MessageBubble from './MessageBubble';
-import EmojiPicker from './EmojiPicker';
-import { chatAPI } from '../services/api';
+import { useState } from "react";
+import { Home, Users, Bell, User, Send, Paperclip, Smile } from "lucide-react";
+import MessageBubble from "./MessageBubble";
+import EmojiPicker from "./EmojiPicker";
+import { chatAPI } from "../services/api";
 
 const ChatArea = ({ chatData, onMessageSent }) => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
@@ -13,16 +13,19 @@ const ChatArea = ({ chatData, onMessageSent }) => {
     if (message.trim() && !sending) {
       setSending(true);
       try {
-        const response = await chatAPI.sendMessage(chatData.contact.id, message.trim());
-        
+        const response = await chatAPI.sendMessage(
+          chatData.contact.id,
+          message.trim()
+        );
+
         // Call callback to update messages in parent component
         if (onMessageSent) {
           onMessageSent(response.data);
         }
-        
-        setMessage('');
+
+        setMessage("");
       } catch (error) {
-        console.error('Failed to send message:', error);
+        console.error("Failed to send message:", error);
         // You could add error handling UI here
       } finally {
         setSending(false);
@@ -31,14 +34,14 @@ const ChatArea = ({ chatData, onMessageSent }) => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
   };
 
   const handleEmojiSelect = (emoji) => {
-    setMessage(prev => prev + emoji);
+    setMessage((prev) => prev + emoji);
   };
 
   const toggleEmojiPicker = () => {
@@ -59,9 +62,11 @@ const ChatArea = ({ chatData, onMessageSent }) => {
             )}
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-white">{chatData.contact.name}</h2>
+            <h2 className="text-lg font-semibold text-white">
+              {chatData.contact.name}
+            </h2>
             <p className="text-sm text-slate-400">
-              {chatData.contact.isOnline ? 'Online' : 'Last seen recently'}
+              {chatData.contact.isOnline ? "Online" : "Last seen recently"}
             </p>
           </div>
         </div>
@@ -92,17 +97,17 @@ const ChatArea = ({ chatData, onMessageSent }) => {
       {/* Message Input */}
       <div className="p-6 border-t border-slate-700 relative">
         <div className="flex items-center space-x-4 bg-slate-700 rounded-2xl p-3">
-          <button 
+          <button
             onClick={toggleEmojiPicker}
             className={`p-2 transition-colors ${
-              showEmojiPicker 
-                ? 'text-violet-400 bg-violet-600/20' 
-                : 'text-slate-400 hover:text-white'
+              showEmojiPicker
+                ? "text-violet-400 bg-violet-600/20"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             <Smile className="w-5 h-5" />
           </button>
-          
+
           <input
             type="text"
             value={message}
@@ -111,11 +116,11 @@ const ChatArea = ({ chatData, onMessageSent }) => {
             placeholder="Type a message..."
             className="flex-1 bg-transparent text-white placeholder-slate-400 focus:outline-none"
           />
-          
+
           <button className="p-2 text-slate-400 hover:text-white transition-colors">
             <Paperclip className="w-5 h-5" />
           </button>
-          
+
           <button
             onClick={handleSendMessage}
             disabled={sending || !message.trim()}
@@ -128,9 +133,9 @@ const ChatArea = ({ chatData, onMessageSent }) => {
             )}
           </button>
         </div>
-        
+
         {/* Emoji Picker */}
-        <EmojiPicker 
+        <EmojiPicker
           isOpen={showEmojiPicker}
           onClose={() => setShowEmojiPicker(false)}
           onEmojiSelect={handleEmojiSelect}
