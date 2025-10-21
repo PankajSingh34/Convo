@@ -40,6 +40,12 @@ backend/logs/
 ehthumbs.db
 Thumbs.db
 
+# Deployment configs (keep only netlify.toml)
+railway.json
+render.yaml
+vercel.json
+heroku.yml
+
 # Runtime data
 pids
 *.pid

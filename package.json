@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "A modern real-time chat application built with React, Node.js, and MongoDB",
   "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm start",
     "build": "cd frontend && npm install && npm run build",
-    "start": "cd backend && npm install && npm start"
+    "start": "cd backend && npm start"
   },
   "keywords": ["chat", "react", "nodejs", "mongodb", "socket.io"],
   "author": "Pankaj Singh",
