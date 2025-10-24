@@ -11,7 +11,6 @@ import connectDB from "./utils/database.js";
 import authRoutes from "./routes/auth.js";
 import chatRoutes from "./routes/chat.js";
 import userRoutes from "./routes/user.js";
-import seedRoutes from "./routes/seed.js";
 
 // Import middleware
 import { errorHandler } from "./middleware/errorHandler.js";
@@ -67,7 +66,6 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", authenticate, chatRoutes);
 app.use("/api/users", authenticate, userRoutes);
-app.use("/api/seed", seedRoutes);
 
 // Socket.IO connection handling
 io.on("connection", (socket) => {
