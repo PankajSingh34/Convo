@@ -31,13 +31,32 @@ connectDB();
 
 const app = express();
 const server = createServer(app);
+
+// Allowed origins for CORS
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+  "http://localhost:5176",
+  "http://localhost:5177",
+  "http://localhost:5178",
+  "https://convo-sxwb.onrender.com",
+  process.env.FRONTEND_URL, // Add your frontend URL from env
+].filter(Boolean); // Remove undefined values
+
 const io = new Server(server, {
   cors: {
     origin: (origin, callback) => {
-      // Allow any localhost origin
-      if (!origin || origin.startsWith("http://localhost:")) {
+      // Allow requests with no origin (mobile apps, curl, etc.)
+      if (!origin) {
+        return callback(null, true);
+      }
+      
+      // Check if origin is allowed (exact match or starts with localhost)
+      if (allowedOrigins.includes(origin) || origin.startsWith("http://localhost:")) {
         callback(null, true);
       } else {
+        console.warn(`⚠️  CORS blocked origin: ${origin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -52,10 +71,16 @@ const PORT = process.env.PORT || 3001;
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow any localhost origin
-      if (!origin || origin.startsWith("http://localhost:")) {
+      // Allow requests with no origin (mobile apps, curl, etc.)
+      if (!origin) {
+        return callback(null, true);
+      }
+      
+      // Check if origin is allowed (exact match or starts with localhost)
+      if (allowedOrigins.includes(origin) || origin.startsWith("http://localhost:")) {
         callback(null, true);
       } else {
+        console.warn(`⚠️  CORS blocked origin: ${origin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
