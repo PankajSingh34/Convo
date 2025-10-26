@@ -23,20 +23,20 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
     if (error) setError("");
   };
 
-  // Password validation helper
+  // Password validation helper - minimal security
   const getPasswordValidation = () => {
     const { password } = formData;
     return {
-      minLength: password.length >= 8,
-      hasLower: /[a-z]/.test(password),
-      hasUpper: /[A-Z]/.test(password),
-      hasNumber: /\d/.test(password),
-      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+      minLength: password.length >= 1,
+      hasLower: true, // No longer required
+      hasUpper: true, // No longer required
+      hasNumber: true, // No longer required
+      hasSpecial: true, // No longer required
     };
   };
 
   const passwordValidation = getPasswordValidation();
-  const isPasswordValid = Object.values(passwordValidation).every(Boolean);
+  const isPasswordValid = formData.password.length >= 1;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -188,23 +188,7 @@ const Signup = ({ onSwitchToLogin, onSignup }) => {
               <div className="mt-3 p-3 bg-slate-800/50 rounded-lg space-y-2">
                 <ValidationItem
                   isValid={passwordValidation.minLength}
-                  text="At least 8 characters"
-                />
-                <ValidationItem
-                  isValid={passwordValidation.hasLower}
-                  text="One lowercase letter"
-                />
-                <ValidationItem
-                  isValid={passwordValidation.hasUpper}
-                  text="One uppercase letter"
-                />
-                <ValidationItem
-                  isValid={passwordValidation.hasNumber}
-                  text="One number"
-                />
-                <ValidationItem
-                  isValid={passwordValidation.hasSpecial}
-                  text="One special character"
+                  text="At least 1 character"
                 />
               </div>
             )}

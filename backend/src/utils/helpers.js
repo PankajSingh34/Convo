@@ -29,34 +29,15 @@ export const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
-// Validate password strength
+// Validate password strength - minimal security
 export const validatePassword = (password) => {
-  const minLength = 8;
-  const hasLower = /[a-z]/.test(password);
-  const hasUpper = /[A-Z]/.test(password);
-  const hasNumber = /\d/.test(password);
-  const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  const minLength = 1;
 
   return {
-    isValid:
-      password.length >= minLength &&
-      hasLower &&
-      hasUpper &&
-      hasNumber &&
-      hasSpecial,
+    isValid: password.length >= minLength,
     errors: [
       ...(password.length < minLength
-        ? [`Password must be at least ${minLength} characters long`]
-        : []),
-      ...(!hasLower
-        ? ["Password must contain at least one lowercase letter"]
-        : []),
-      ...(!hasUpper
-        ? ["Password must contain at least one uppercase letter"]
-        : []),
-      ...(!hasNumber ? ["Password must contain at least one number"] : []),
-      ...(!hasSpecial
-        ? ["Password must contain at least one special character"]
+        ? [`Password must be at least ${minLength} character long`]
         : []),
     ],
   };

@@ -1,32 +1,94 @@
-import { useState } from "react";
-import { Home, Users, Bell, User, Send, Paperclip, Smile } from "lucide-react";
+import { useState, useRef } from "react";
+import { User, Send, Paperclip, Smile, X, File } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import EmojiPicker from "./EmojiPicker";
-import { chatAPI } from "../services/api";
+import { chatAPI, fileAPI } from "../services/api";
 
 const ChatArea = ({ chatData, onMessageSent }) => {
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert("File size should be less than 10MB");
+        return;
+      }
+      setSelectedFile(file);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleAttachmentClick = () => {
+    fileInputRef.current?.click();
+  };
 
   const handleSendMessage = async () => {
-    if (message.trim() && !sending) {
+    if ((message.trim() || selectedFile) && !sending) {
       setSending(true);
       try {
+        let fileUrl = null;
+        let fileName = null;
+        let fileSize = null;
+        let messageType = "text";
+
+        // Upload file first if selected
+        if (selectedFile) {
+          try {
+            const uploadResponse = await fileAPI.uploadFile(selectedFile);
+            fileUrl = uploadResponse.file.url;
+            fileName = uploadResponse.file.originalName;
+            fileSize = uploadResponse.file.size;
+
+            // Determine message type based on file
+            if (selectedFile.type.startsWith("image/")) {
+              messageType = "image";
+            } else {
+              messageType = "file";
+            }
+          } catch (uploadError) {
+            console.error("File upload error:", uploadError);
+            alert("Failed to upload file: " + uploadError.message);
+            setSending(false);
+            return;
+          }
+        }
+
+        // Send message with or without file
+        const content = message.trim() || (selectedFile ? fileName : "");
         const response = await chatAPI.sendMessage(
           chatData.contact.id,
-          message.trim()
+          content,
+          messageType,
+          fileUrl,
+          fileName,
+          fileSize
         );
 
-        // Call callback to update messages in parent component
         if (onMessageSent) {
           onMessageSent(response.data);
         }
 
+        // Clear inputs
         setMessage("");
+        setSelectedFile(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       } catch (error) {
         console.error("Failed to send message:", error);
-        // You could add error handling UI here
+        alert("Failed to send message. Please try again.");
       } finally {
         setSending(false);
       }
@@ -73,15 +135,6 @@ const ChatArea = ({ chatData, onMessageSent }) => {
 
         <div className="flex items-center space-x-4">
           <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
-            <Home className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
-            <Users className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
-            <Bell className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
             <User className="w-5 h-5" />
           </button>
         </div>
@@ -96,6 +149,27 @@ const ChatArea = ({ chatData, onMessageSent }) => {
 
       {/* Message Input */}
       <div className="p-6 border-t border-slate-700 relative">
+        {/* Selected File Preview */}
+        {selectedFile && (
+          <div className="mb-3 flex items-center gap-3 bg-slate-800 p-3 rounded-lg">
+            <File className="w-5 h-5 text-violet-400" />
+            <div className="flex-1">
+              <p className="text-sm text-white font-medium">
+                {selectedFile.name}
+              </p>
+              <p className="text-xs text-slate-400">
+                {(selectedFile.size / 1024).toFixed(2)} KB
+              </p>
+            </div>
+            <button
+              onClick={handleRemoveFile}
+              className="p-1 hover:bg-slate-700 rounded-full transition-colors"
+            >
+              <X className="w-4 h-4 text-slate-400 hover:text-white" />
+            </button>
+          </div>
+        )}
+
         <div className="flex items-center space-x-4 bg-slate-700 rounded-2xl p-3">
           <button
             onClick={toggleEmojiPicker}
@@ -117,13 +191,26 @@ const ChatArea = ({ chatData, onMessageSent }) => {
             className="flex-1 bg-transparent text-white placeholder-slate-400 focus:outline-none"
           />
 
-          <button className="p-2 text-slate-400 hover:text-white transition-colors">
+          {/* Hidden File Input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            onChange={handleFileSelect}
+            className="hidden"
+            accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt"
+          />
+
+          <button
+            onClick={handleAttachmentClick}
+            className="p-2 text-slate-400 hover:text-white transition-colors"
+            title="Attach file"
+          >
             <Paperclip className="w-5 h-5" />
           </button>
 
           <button
             onClick={handleSendMessage}
-            disabled={sending || !message.trim()}
+            disabled={sending || (!message.trim() && !selectedFile)}
             className="p-2 bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 disabled:cursor-not-allowed text-white rounded-full transition-colors"
           >
             {sending ? (

@@ -110,6 +110,9 @@ router.get("/messages/:otherUserId", async (req, res) => {
       isRead: msg.isRead,
       messageType: msg.messageType,
       isEdited: msg.isEdited,
+      fileUrl: msg.fileUrl,
+      fileName: msg.fileName,
+      fileSize: msg.fileSize,
     }));
 
     // Mark messages as read
@@ -155,7 +158,14 @@ router.get("/messages/:otherUserId", async (req, res) => {
 router.post("/send", async (req, res) => {
   try {
     const currentUserId = req.userId;
-    const { receiverId, content, messageType = "text" } = req.body;
+    const {
+      receiverId,
+      content,
+      messageType = "text",
+      fileUrl = null,
+      fileName = null,
+      fileSize = null,
+    } = req.body;
 
     // Validation
     if (!receiverId || !content) {
@@ -184,6 +194,9 @@ router.post("/send", async (req, res) => {
       content,
       messageType,
       chatRoom,
+      fileUrl,
+      fileName,
+      fileSize,
     });
 
     await newMessage.save();
@@ -212,7 +225,21 @@ router.post("/send", async (req, res) => {
       isRead: newMessage.isRead,
       messageType: newMessage.messageType,
       isEdited: newMessage.isEdited,
+      fileUrl: newMessage.fileUrl,
+      fileName: newMessage.fileName,
+      fileSize: newMessage.fileSize,
     };
+
+    // Emit message via Socket.IO to the receiver
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("new-message", {
+        ...formattedMessage,
+        receiverId: receiverId,
+        senderId: currentUserId,
+        chatRoom: chatRoom,
+      });
+    }
 
     res.status(201).json({
       message: "Message sent successfully",

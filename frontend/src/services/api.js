@@ -1,5 +1,6 @@
 // Use environment variable or fallback to localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
 // Helper function to get auth token from localStorage
 const getAuthToken = () => {
@@ -119,11 +120,49 @@ export const chatAPI = {
     return apiCall(`/chat/messages/${otherUserId}?${params.toString()}`);
   },
 
-  sendMessage: async (receiverId, content, messageType = "text") => {
+  sendMessage: async (
+    receiverId,
+    content,
+    messageType = "text",
+    fileUrl = null,
+    fileName = null,
+    fileSize = null
+  ) => {
     return apiCall("/chat/send", {
       method: "POST",
-      body: JSON.stringify({ receiverId, content, messageType }),
+      body: JSON.stringify({
+        receiverId,
+        content,
+        messageType,
+        fileUrl,
+        fileName,
+        fileSize,
+      }),
     });
+  },
+};
+
+// File upload API
+export const fileAPI = {
+  uploadFile: async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const token = getAuthToken();
+    const response = await fetch(`${API_BASE_URL}/upload`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "File upload failed");
+    }
+
+    return response.json();
   },
 };
 

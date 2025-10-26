@@ -4,6 +4,11 @@ import ChatArea from "./components/ChatArea";
 import Auth from "./components/Auth";
 import LoadingSpinner from "./components/LoadingSpinner";
 import { authAPI, usersAPI, chatAPI } from "./services/api";
+import {
+  initializeSocket,
+  disconnectSocket,
+  getSocket,
+} from "./services/socket";
 
 function App() {
   const [user, setUser] = useState(null); // null means not authenticated
@@ -57,6 +62,71 @@ function App() {
     }
   };
 
+  // Initialize Socket.IO when user is authenticated
+  useEffect(() => {
+    if (user) {
+      const socket = initializeSocket(user._id);
+
+      // Listen for user online status updates
+      socket.on("user-status-changed", ({ userId, isOnline }) => {
+        setContacts((prevContacts) =>
+          prevContacts.map((contact) =>
+            contact._id === userId ? { ...contact, isOnline } : contact
+          )
+        );
+      });
+
+      // Listen for new messages
+      socket.on("new-message", (message) => {
+        console.log("📨 New message received via socket:", message);
+
+        // Check if this message is for the current user or from the current selected contact
+        const isRelevantMessage =
+          (message.receiverId === user._id || message.senderId === user._id) &&
+          selectedContactId &&
+          (message.senderId === selectedContactId ||
+            message.receiverId === selectedContactId);
+
+        if (isRelevantMessage) {
+          // Format the message for display
+          const formattedMessage = {
+            id: message.id,
+            senderId: message.senderId,
+            senderName: message.senderName,
+            content: message.content,
+            timestamp: message.timestamp,
+            type: message.senderId === user._id ? "sent" : "received",
+            isRead: message.isRead,
+            messageType: message.messageType || "text",
+            isEdited: message.isEdited || false,
+            fileUrl: message.fileUrl,
+            fileName: message.fileName,
+            fileSize: message.fileSize,
+          };
+
+          // Add message to the list if it's not already there
+          setMessages((prevMessages) => {
+            const exists = prevMessages.some(
+              (msg) => msg.id === formattedMessage.id
+            );
+            if (!exists) {
+              return [...prevMessages, formattedMessage];
+            }
+            return prevMessages;
+          });
+        }
+
+        // Refresh contacts to update last message preview
+        loadContacts();
+      });
+
+      // Cleanup on unmount or logout
+      return () => {
+        disconnectSocket();
+      };
+    }
+  }, [user, selectedContactId]);
+
   const handleAuthenticated = (userData) => {
     setUser(userData);
     loadContacts();
@@ -81,8 +151,14 @@ function App() {
   };
 
   const handleMessageSent = (newMessage) => {
-    // Add the new message to the current messages array
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    // Add the new message to the current messages array, checking for duplicates
+    setMessages((prevMessages) => {
+      const exists = prevMessages.some((msg) => msg.id === newMessage.id);
+      if (!exists) {
+        return [...prevMessages, newMessage];
+      }
+      return prevMessages;
+    });
 
     // Optionally refresh the contacts list to update last message
     loadContacts();
